@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
+use App\Events\DataUpdate;
+use App\Listeners\DataUpdatedListener;
 
 class UserController extends Controller
 {
@@ -104,6 +106,33 @@ class UserController extends Controller
             $database->getReference('/isGateOpen')->set(false);
             
             
+        } catch (\Exception $e) {
+            // Tangani kesalahan koneksi
+            dd("Error: " . $e->getMessage());
+        }
+    }
+
+    public function statusInfo(){
+        $serviceAccountPath = base_path('path/cobatest-c4366-firebase-adminsdk-szrh2-196e3bbc1a.json');
+
+        try {
+            $firebase = (new Factory)
+                ->withServiceAccount($serviceAccountPath)
+                ->withDatabaseUri("https://cobatest-c4366-default-rtdb.asia-southeast1.firebasedatabase.app");
+
+            // Dapatkan instance Database
+            $database = $firebase->createDatabase();
+
+
+            // Uji koneksi dengan mendapatkan referensi ke root Firebase
+            $reference = $database->getReference('/isGateOpen');
+            $value = $reference->getValue();
+
+            // return response()->json($value);
+            // return response()->json($value);
+            return view('sukses', [
+                'isGateOpen' => $value,
+            ]);
         } catch (\Exception $e) {
             // Tangani kesalahan koneksi
             dd("Error: " . $e->getMessage());

@@ -14,14 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/form', function () {
-    return view('form');
-});
-
 Route::post('/send', [UserController::class, 'send'])->name('send');
-Route::get('/sukses', function () {
-    return view('sukses');
-});
+// Route::get('/sukses', function () {
+//     return view('sukses');
+// });
 
-Route::get('/get', [UserController::class, 'getID']);
-// Route::get('/sukses', [UserController::class, 'closeGate']);
+Route::get('/form', [UserController::class, 'getID']);
+Route::get('/sukses', [UserController::class, 'statusInfo']);
